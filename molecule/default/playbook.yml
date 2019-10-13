@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  pre_tasks:
+    - name: Gathering Facts
+      become: false
+      setup:
+        gather_subset:
+          - '!all'
+          - network
+          - hardware
+    - name: Ensure Package Cache Is up to Date
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family | lower == 'debian'
+  roles:
+    - role: hwwilliams.mono
